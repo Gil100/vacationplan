@@ -62,8 +62,8 @@ const generate_id = (): string => {
   return Date.now().toString(36) + Math.random().toString(36).substr(2)
 }
 
-export const use_vacation_store = create<VacationStore>()()
-  (devtools(
+export const use_vacation_store = create<VacationStore>()(
+  devtools(
     persist(
       (set, get) => ({
         // Initial state
@@ -157,7 +157,8 @@ export const use_vacation_store = create<VacationStore>()()
       }
     ),
     { name: 'vacation-store' }
-  ))
+  )
+)
 
 // Custom hooks for easier usage
 export const use_vacations = () => {
