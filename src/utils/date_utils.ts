@@ -151,3 +151,21 @@ export const get_relative_time_hebrew = (date: Date): string => {
   if (days > 0) return `לפני ${days} ימים`
   return `בעוד ${Math.abs(days)} ימים`
 }
+
+// Main Hebrew date formatter with format options
+export const format_hebrew_date = (date: Date | string, format_type: 'full' | 'short' | 'medium' = 'medium'): string => {
+  const date_obj = typeof date === 'string' ? new Date(date) : date
+  
+  switch (format_type) {
+    case 'full':
+      return format_hebrew_date_full(date_obj)
+    case 'short':
+      return format_hebrew_date_short(date_obj)
+    case 'medium':
+    default:
+      const day_name = get_hebrew_day_short(date_obj)
+      const date_num = date_obj.getDate()
+      const month = get_hebrew_month(date_obj)
+      return `${day_name} ${date_num} ${month}`
+  }
+}

@@ -1,16 +1,17 @@
 import React from 'react'
+import { DailyItineraryPlanner } from '../components/planner/DailyItineraryPlanner'
 
 const PlannerPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50 rtl:text-right">
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">
-          מתכנן החופשה
-        </h1>
-        <div className="text-center py-16">
-          <p className="text-gray-600 text-lg">
-            כאן תוכל לתכנן את החופשה שלך בפרטים
-          </p>
+      <div className="h-screen flex flex-col">
+        <div className="bg-white border-b border-gray-200 px-6 py-4">
+          <h1 className="text-2xl font-bold text-gray-900">
+            מתכנן החופשה
+          </h1>
+        </div>
+        <div className="flex-1">
+          <DailyItineraryPlanner />
         </div>
       </div>
     </div>
