@@ -6,11 +6,14 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:prod": "npm run build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "eslint . --ext ts,tsx --fix",
     "preview": "vite preview",
+    "deploy": "npm run build:prod && npm run preview",
     "test": "jest",
     "test:watch": "jest --watch",
+    "test:build": "npm run build && npm run preview",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
@@ -47,6 +50,7 @@
     "postcss": "^8.4.47",
     "prettier": "^3.3.3",
     "tailwindcss": "^3.4.13",
+    "terser": "^5.43.1",
     "typescript": "~5.6.2",
     "vite": "^5.4.8"
   }

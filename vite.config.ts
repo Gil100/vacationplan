@@ -14,10 +14,28 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
-    sourcemap: true,
+    sourcemap: false, // Disable for production
+    rollupOptions: {
+      output: {
+        // Optimize chunk splitting for better caching
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          ui: ['./src/components/ui'],
+        },
+      },
+    },
+    // Optimize for production
+    minify: 'terser',
+    target: 'es2015',
+    cssCodeSplit: true,
   },
   server: {
     port: 3000,
+    open: true,
+  },
+  // Preview settings for testing production build locally
+  preview: {
+    port: 4173,
     open: true,
   },
 })
