@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import React, { useState, useCallback } from 'react'
 import { use_error } from '../contexts/app_context'
 
 interface UseErrorHandlerReturn {
@@ -10,18 +10,15 @@ interface UseErrorHandlerReturn {
 }
 
 export const use_error_handler = (): UseErrorHandlerReturn => {
-  const { error: global_error, set_error: set_global_error, clear_error: clear_global_error } = use_error()
+  const { error, set_error } = use_error()
   const [local_error, set_local_error] = useState<string | null>(null)
   
-  const set_error = useCallback((error: string | null) => {
-    set_local_error(error)
-    set_global_error(error)
-  }, [set_global_error])
+  const final_error = error || local_error
   
   const clear_error = useCallback(() => {
+    set_error(null)
     set_local_error(null)
-    clear_global_error()
-  }, [clear_global_error])
+  }, [set_error])
   
   const handle_error = useCallback((error: unknown) => {
     let error_message: string
@@ -30,31 +27,36 @@ export const use_error_handler = (): UseErrorHandlerReturn => {
       error_message = error.message
     } else if (typeof error === 'string') {
       error_message = error
+    } else if (error && typeof error === 'object' && 'message' in error) {
+      error_message = String((error as { message: unknown }).message)
     } else {
       error_message = 'אירעה שגיאה לא צפויה'
     }
     
-    set_error(error_message)
-    
-    // Log error in development
-    if (process.env.NODE_ENV === 'development') {
-      console.error('Error handled:', error)
-    }
-  }, [set_error])
+    console.error('Error handled:', error)
+    set_local_error(error_message)
+  }, [])
   
   const handle_async_error = useCallback(async <T>(promise: Promise<T>): Promise<T | null> => {
     try {
-      clear_error()
       return await promise
     } catch (error) {
       handle_error(error)
       return null
     }
-  }, [handle_error, clear_error])
+  }, [handle_error])
+  
+  const final_set_error = useCallback((error: string | null) => {
+    if (set_error) {
+      set_error(error)
+    } else {
+      set_local_error(error)
+    }
+  }, [set_error])
   
   return {
-    error: local_error || global_error,
-    set_error,
+    error: final_error,
+    set_error: final_set_error,
     clear_error,
     handle_error,
     handle_async_error,
@@ -73,6 +75,6 @@ export const with_error_handling = <P extends object>(
       on_error: handle_error,
     } as P & { on_error: (error: unknown) => void }
     
-    return <Component {...enhanced_props} />
+    return React.createElement(Component, enhanced_props)
   }
 }
