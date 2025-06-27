@@ -1,0 +1,93 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    direction: rtl;
+    font-family: 'Assistant', 'Heebo', system-ui, sans-serif;
+  }
+  
+  body {
+    @apply bg-gray-50 text-gray-900;
+    line-height: 1.7;
+    letter-spacing: 0.01em;
+  }
+  
+  /* Hebrew text optimization */
+  .hebrew-text {
+    font-family: 'Assistant', 'Heebo', system-ui, sans-serif;
+    line-height: 1.7;
+    letter-spacing: 0.01em;
+    text-align: right;
+  }
+  
+  .hebrew-title {
+    font-family: 'Heebo', 'Assistant', system-ui, sans-serif;
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+  }
+  
+  .hebrew-body {
+    font-family: 'Assistant', 'Heebo', system-ui, sans-serif;
+    font-weight: 400;
+    line-height: 1.8;
+    letter-spacing: 0.005em;
+  }
+  
+  /* RTL-specific utility classes */
+  .rtl-flip {
+    transform: scaleX(-1);
+  }
+  
+  .ltr {
+    direction: ltr;
+  }
+  
+  .rtl {
+    direction: rtl;
+  }
+}
+
+@layer utilities {
+  /* Direction-aware margin utilities */
+  .ms-auto { margin-inline-start: auto; }
+  .me-auto { margin-inline-end: auto; }
+  .ms-1 { margin-inline-start: 0.25rem; }
+  .me-1 { margin-inline-end: 0.25rem; }
+  .ms-2 { margin-inline-start: 0.5rem; }
+  .me-2 { margin-inline-end: 0.5rem; }
+  .ms-3 { margin-inline-start: 0.75rem; }
+  .me-3 { margin-inline-end: 0.75rem; }
+  .ms-4 { margin-inline-start: 1rem; }
+  .me-4 { margin-inline-end: 1rem; }
+  .ms-6 { margin-inline-start: 1.5rem; }
+  .me-6 { margin-inline-end: 1.5rem; }
+  .ms-8 { margin-inline-start: 2rem; }
+  .me-8 { margin-inline-end: 2rem; }
+  
+  /* Direction-aware padding utilities */
+  .ps-1 { padding-inline-start: 0.25rem; }
+  .pe-1 { padding-inline-end: 0.25rem; }
+  .ps-2 { padding-inline-start: 0.5rem; }
+  .pe-2 { padding-inline-end: 0.5rem; }
+  .ps-3 { padding-inline-start: 0.75rem; }
+  .pe-3 { padding-inline-end: 0.75rem; }
+  .ps-4 { padding-inline-start: 1rem; }
+  .pe-4 { padding-inline-end: 1rem; }
+  .ps-6 { padding-inline-start: 1.5rem; }
+  .pe-6 { padding-inline-end: 1.5rem; }
+  .ps-8 { padding-inline-start: 2rem; }
+  .pe-8 { padding-inline-end: 2rem; }
+  
+  /* Direction-aware border utilities */
+  .border-s { border-inline-start-width: 1px; }
+  .border-e { border-inline-end-width: 1px; }
+  .border-s-2 { border-inline-start-width: 2px; }
+  .border-e-2 { border-inline-end-width: 2px; }
+  
+  /* Text alignment utilities */
+  .text-start { text-align: start; }
+  .text-end { text-align: end; }
+}

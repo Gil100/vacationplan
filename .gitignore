@@ -51,6 +51,7 @@ logs
 # Temporary files
 *.tmp
 *.temp
+temp-vite/
 
 # SSH keys and certificates
 *.pem
