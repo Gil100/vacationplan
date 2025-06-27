@@ -23,7 +23,22 @@
       "Bash(npx tsc:*)",
       "Bash(vite build)",
       "Bash(npx vite:*)",
-      "Bash(npm run preview:*)"
+      "Bash(npm run preview:*)",
+      "Bash(sed:*)",
+      "mcp__github__get_repository",
+      "mcp__github__get_file_contents",
+      "mcp__github__list_pull_requests",
+      "Bash(gh repo view:*)",
+      "WebFetch(domain:github.com)",
+      "mcp__mcp-playwright__playwright_navigate",
+      "Bash(npx playwright install:*)",
+      "Bash(npx:*)",
+      "Bash(PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1 npm install --global playwright@1.53.1)",
+      "Bash(playwright install:*)",
+      "Bash(PLAYWRIGHT_BROWSERS_PATH=/tmp/playwright-browsers playwright install chromium)",
+      "Bash(export PLAYWRIGHT_BROWSERS_PATH=/tmp/playwright-browsers)",
+      "Bash(curl:*)",
+      "WebFetch(domain:gil100.github.io)"
     ],
     "deny": []
   }
