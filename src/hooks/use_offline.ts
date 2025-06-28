@@ -26,8 +26,8 @@ export const use_offline = (): UseOfflineReturn => {
   const register_service_worker = useCallback(async () => {
     if ('serviceWorker' in navigator) {
       try {
-        const registration = await navigator.serviceWorker.register('/sw.js', {
-          scope: '/'
+        const registration = await navigator.serviceWorker.register('/vacationplan/sw.js', {
+          scope: '/vacationplan/'
         })
 
         console.log('Service Worker registered successfully:', registration.scope)
