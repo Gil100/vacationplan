@@ -50,7 +50,8 @@
       "mcp__playwright__browser_network_requests",
       "mcp__playwright__browser_click",
       "WebFetch(domain:reactjs.org)",
-      "mcp__playwright__browser_wait_for"
+      "mcp__playwright__browser_wait_for",
+      "mcp__playwright__browser_press_key"
     ],
     "deny": []
   }
