@@ -40,7 +40,7 @@ const Header: React.FC = () => {
                       : 'text-gray-600 hover:text-blue-600'
                   }`}
                 >
-                  <Icon className="w-4 h-4 ml-2" />
+                  {Icon && <Icon className="w-4 h-4 ml-2" />}
                   {item.name}
                 </Link>
               )
