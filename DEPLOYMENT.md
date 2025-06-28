@@ -162,6 +162,39 @@ Your deployment is successful when:
 - [ ] Loading times are under 3 seconds
 - [ ] No console errors in browser
 
+## 🔧 Technical Specifications
+
+### Build Output Analysis
+After successful build, you should see these optimized chunks:
+- **Main Bundle**: ~42 kB (gzipped: ~14 kB)
+- **React Vendor**: ~139 kB (gzipped: ~45 kB)
+- **Page Chunks**: Home (~18 kB), Dashboard (~21 kB), Planner (~46 kB)
+- **Total Application**: ~350 kB (gzipped: ~130 kB)
+
+### Performance Targets
+- **First Contentful Paint**: < 1.5s
+- **Largest Contentful Paint**: < 2.5s  
+- **Cumulative Layout Shift**: < 0.1
+- **First Input Delay**: < 100ms
+
+### Browser Support
+- **Modern Browsers**: Chrome 90+, Firefox 88+, Safari 14+
+- **Mobile Support**: iOS Safari 14+, Chrome Mobile 90+
+- **RTL Support**: All modern browsers with CSS logical properties
+
+## 🛡️ Security & Privacy
+
+### Data Protection
+- **Local Storage Only**: All vacation data stored locally in browser
+- **No External APIs**: Self-contained application with no data transmission
+- **Privacy-First**: No analytics or tracking by default
+- **HTTPS Enforced**: GitHub Pages automatically provides SSL certificates
+
+### Content Security
+- **XSS Protection**: React's built-in sanitization
+- **Secure Headers**: Configured in build process
+- **Safe Dependencies**: All packages vetted and up-to-date
+
 ## 🔄 Automatic Updates
 
 The workflow is configured to automatically deploy when you:
