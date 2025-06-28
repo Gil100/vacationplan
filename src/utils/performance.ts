@@ -38,7 +38,7 @@ export const debounce = <T extends (...args: any[]) => any>(
   func: T,
   wait: number
 ): ((...args: Parameters<T>) => void) => {
-  let timeout: NodeJS.Timeout | null = null
+  let timeout: ReturnType<typeof setTimeout> | null = null
   
   return (...args: Parameters<T>) => {
     if (timeout) {
@@ -103,13 +103,8 @@ export const measure_execution = <T extends (...args: any[]) => any>(
 export const get_device_performance_tier = (): 'low' | 'medium' | 'high' => {
   if (typeof navigator === 'undefined') return 'medium'
   
-  // @ts-ignore - hardwareConcurrency might not be available
-  const cores = navigator.hardwareConcurrency || 4
-  
-  // @ts-ignore - deviceMemory is experimental
+  const cores = (navigator as any).hardwareConcurrency || 4
   const memory = (navigator as any).deviceMemory || 4
-  
-  // @ts-ignore - connection might not be available
   const connection = (navigator as any).connection
   const effective_type = connection?.effectiveType || '4g'
   
