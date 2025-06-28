@@ -1,46 +1,75 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { use_activities } from '../../stores/vacation_store'
+import { Location, ActivityCategory } from '../../types'
+import { LocationPicker } from './LocationPicker'
+import { get_category_info } from './CategoryFilter'
+import { activity_template_service, ActivityTemplate } from '../../services/activity_templates'
 
 interface ActivitySidebarProps {
   vacation_id: string
   selected_day: number
   on_close: () => void
+  destination?: string
 }
 
 export const ActivitySidebar: React.FC<ActivitySidebarProps> = ({
   vacation_id,
   selected_day,
-  on_close
+  on_close,
+  destination
 }) => {
   const { add_activity } = use_activities()
   const [form_data, set_form_data] = useState<{
     title: string
     description: string
-    location: string
+    location: Location | null
     start_time: string
     end_time: string
     cost: number
-    category: 'accommodation' | 'food' | 'activity' | 'transport' | 'other'
+    category: ActivityCategory
     notes: string
   }>({
     title: '',
     description: '',
-    location: '',
+    location: null,
     start_time: '',
     end_time: '',
     cost: 0,
-    category: 'activity',
+    category: ActivityCategory.ATTRACTION,
     notes: ''
   })
 
-  const activity_suggestions = [
-    { title: 'ביקור במוזיאון', category: 'activity' as const, duration: 120 },
-    { title: 'טיול חוף', category: 'activity' as const, duration: 180 },
-    { title: 'ארוחה במסעדה מקומית', category: 'food' as const, duration: 90 },
-    { title: 'קניות בשוק', category: 'activity' as const, duration: 120 },
-    { title: 'סיור עירוני', category: 'activity' as const, duration: 150 },
-    { title: 'פעילות ספורט', category: 'activity' as const, duration: 90 }
-  ]
+  const [suggested_templates, set_suggested_templates] = useState<ActivityTemplate[]>([])
+  const [template_search, set_template_search] = useState('')
+  const [show_all_templates, set_show_all_templates] = useState(false)
+
+  // Load suggested templates based on context
+  useEffect(() => {
+    const context = {
+      category: form_data.category !== ActivityCategory.ATTRACTION ? form_data.category : undefined,
+      time: form_data.start_time,
+      location: destination
+    }
+    
+    const templates = activity_template_service.get_suggested_templates(context)
+    set_suggested_templates(templates.slice(0, 6))
+  }, [form_data.category, form_data.start_time, destination])
+
+  // Search templates when query changes
+  useEffect(() => {
+    if (template_search.trim()) {
+      const search_results = activity_template_service.search_templates(template_search)
+      set_suggested_templates(search_results.slice(0, 8))
+    } else {
+      const context = {
+        category: form_data.category !== ActivityCategory.ATTRACTION ? form_data.category : undefined,
+        time: form_data.start_time,
+        location: destination
+      }
+      const templates = activity_template_service.get_suggested_templates(context)
+      set_suggested_templates(templates.slice(0, 6))
+    }
+  }, [template_search, form_data.category, form_data.start_time, destination])
 
   const handle_submit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -49,27 +78,55 @@ export const ActivitySidebar: React.FC<ActivitySidebarProps> = ({
     add_activity({
       vacation_id,
       day: selected_day,
-      ...form_data
+      title: form_data.title,
+      description: form_data.description,
+      location: form_data.location?.name || '',
+      start_time: form_data.start_time,
+      end_time: form_data.end_time,
+      cost: form_data.cost,
+      category: form_data.category as any, // Convert to old category format for now
+      notes: form_data.notes
     })
 
     set_form_data({
       title: '',
       description: '',
-      location: '',
+      location: null,
       start_time: '',
       end_time: '',
       cost: 0,
-      category: 'activity',
+      category: ActivityCategory.ATTRACTION,
       notes: ''
     })
   }
 
-  const handle_suggestion_click = (suggestion: typeof activity_suggestions[0]) => {
+  const handle_template_click = (template: ActivityTemplate) => {
     set_form_data({
       ...form_data,
-      title: suggestion.title,
-      category: suggestion.category
+      title: template.title,
+      description: template.description,
+      category: template.category,
+      cost: template.estimated_cost,
+      notes: template.tags.join(', ')
     })
+    
+    // Set suggested time if available
+    if (template.suggested_times.length > 0 && !form_data.start_time) {
+      const suggested_time = template.suggested_times[0]
+      const [hours, minutes] = suggested_time.split(':')
+      const start_time = `${hours}:${minutes}`
+      
+      // Calculate end time based on duration
+      const start_date = new Date(`2000-01-01T${start_time}:00`)
+      const end_date = new Date(start_date.getTime() + template.duration * 60000)
+      const end_time = end_date.toTimeString().substring(0, 5)
+      
+      set_form_data(prev => ({
+        ...prev,
+        start_time,
+        end_time
+      }))
+    }
   }
 
   return (
@@ -89,21 +146,77 @@ export const ActivitySidebar: React.FC<ActivitySidebarProps> = ({
       </div>
 
       <div className="p-4 space-y-6">
-        {/* Activity Suggestions */}
+        {/* Activity Templates */}
         <div>
-          <h4 className="text-sm font-medium text-gray-900 mb-3">הצעות פעילויות</h4>
-          <div className="grid grid-cols-1 gap-2">
-            {activity_suggestions.map((suggestion, index) => (
-              <button
-                key={index}
-                onClick={() => handle_suggestion_click(suggestion)}
-                className="text-right p-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors"
-              >
-                <div className="font-medium text-gray-900">{suggestion.title}</div>
-                <div className="text-sm text-gray-500">{suggestion.duration} דקות</div>
-              </button>
-            ))}
+          <div className="flex items-center justify-between mb-3">
+            <button
+              onClick={() => set_show_all_templates(!show_all_templates)}
+              className="text-xs text-blue-600 hover:text-blue-700"
+            >
+              {show_all_templates ? 'הצג פחות' : 'הצג עוד'}
+            </button>
+            <h4 className="text-sm font-medium text-gray-900">תבניות פעילויות</h4>
           </div>
+          
+          {/* Template search */}
+          <div className="mb-3">
+            <input
+              type="text"
+              value={template_search}
+              onChange={(e) => set_template_search(e.target.value)}
+              placeholder="חפש תבנית פעילות..."
+              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-md text-right"
+            />
+          </div>
+          
+          <div className="grid grid-cols-1 gap-2 max-h-60 overflow-y-auto">
+            {(show_all_templates 
+              ? activity_template_service.get_all_templates() 
+              : suggested_templates
+            ).map((template, index) => {
+              const category_info = get_category_info(template.category)
+              return (
+                <button
+                  key={template.id}
+                  onClick={() => handle_template_click(template)}
+                  className="text-right p-3 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  <div className="flex items-start justify-between mb-2">
+                    <div className="flex items-center gap-2">
+                      <span className={`text-xs px-2 py-1 rounded ${category_info.color}`}>
+                        {category_info.label}
+                      </span>
+                      {template.estimated_cost === 0 && (
+                        <span className="text-xs px-2 py-1 bg-green-100 text-green-700 rounded">
+                          חינם
+                        </span>
+                      )}
+                      {template.is_kosher_friendly && (
+                        <span className="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded">
+                          כשר
+                        </span>
+                      )}
+                    </div>
+                    <span className="text-lg">{template.icon}</span>
+                  </div>
+                  <div className="text-right">
+                    <div className="font-medium text-gray-900 mb-1">{template.title}</div>
+                    <div className="text-xs text-gray-500 mb-1">{template.description}</div>
+                    <div className="flex items-center justify-between text-xs text-gray-400">
+                      <span>₪{template.estimated_cost}</span>
+                      <span>{template.duration} דקות</span>
+                    </div>
+                  </div>
+                </button>
+              )
+            })}
+          </div>
+          
+          {suggested_templates.length === 0 && template_search && (
+            <div className="text-center text-gray-500 text-sm py-4">
+              לא נמצאו תבניות עבור "{template_search}"
+            </div>
+          )}
         </div>
 
         {/* Activity Form */}
@@ -138,12 +251,13 @@ export const ActivitySidebar: React.FC<ActivitySidebarProps> = ({
             <label className="block text-sm font-medium text-gray-700 mb-1">
               מיקום
             </label>
-            <input
-              type="text"
+            <LocationPicker
               value={form_data.location}
-              onChange={(e) => set_form_data({ ...form_data, location: e.target.value })}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md text-right"
-              placeholder="כתובת או שם המקום"
+              onChange={(location) => set_form_data({ ...form_data, location })}
+              placeholder="חפש מיקום או הזן כתובת"
+              activity_category={form_data.category}
+              destination={destination}
+              show_suggestions={true}
             />
           </div>
 
@@ -178,14 +292,17 @@ export const ActivitySidebar: React.FC<ActivitySidebarProps> = ({
             </label>
             <select
               value={form_data.category}
-              onChange={(e) => set_form_data({ ...form_data, category: e.target.value as any })}
+              onChange={(e) => set_form_data({ ...form_data, category: e.target.value as ActivityCategory })}
               className="w-full px-3 py-2 border border-gray-300 rounded-md text-right"
             >
-              <option value="activity">פעילות</option>
-              <option value="food">אוכל</option>
-              <option value="accommodation">לינה</option>
-              <option value="transport">תחבורה</option>
-              <option value="other">אחר</option>
+              {Object.values(ActivityCategory).map((category) => {
+                const category_info = get_category_info(category)
+                return (
+                  <option key={category} value={category}>
+                    {category_info.icon} {category_info.label}
+                  </option>
+                )
+              })}
             </select>
           </div>
 

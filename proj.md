@@ -224,14 +224,14 @@ Deliverables:
 **Goal**: Rich location and activity data management
 
 **Tasks**:
-- [ ] Create location search and selection
-- [ ] Implement activity categorization system
-- [ ] Add custom activity creation
-- [ ] Create activity templates library
-- [ ] Implement location-based suggestions
-- [ ] Add photo/image upload for activities
-- [ ] Create activity time and cost tracking
-- [ ] Implement activity sharing between days
+- [x] Create location search and selection
+- [x] Implement activity categorization system
+- [x] Add custom activity creation
+- [x] Create activity templates library
+- [x] Implement location-based suggestions
+- [x] Add photo/image upload for activities
+- [x] Create activity time and cost tracking
+- [x] Implement activity sharing between days
 
 ---
 
@@ -373,6 +373,17 @@ Deliverables:
 - [ ] Phase 5: Polish & Deployment
 
 ### Key Decisions Log
+
+**Checkpoint 3.4 Completed (June 2025)**:
+- **Location Search Service**: Built comprehensive Israeli location database with 15+ destinations including Jerusalem, Tel Aviv, Haifa, and Eilat
+- **Smart Location Picker**: Advanced autocomplete with category filtering, kosher/accessibility tags, and custom location creation
+- **Enhanced Categories**: Expanded from 5 to 10 activity categories (attraction, restaurant, nature, culture, sports, etc.) with Hebrew labels and icons
+- **Activity Templates Library**: 15+ pre-built templates with estimated costs, durations, and cultural considerations (kosher, Shabbat-friendly)
+- **Smart Suggestions**: Context-aware template suggestions based on time, location, and activity category
+- **Cost Tracking System**: Comprehensive cost analysis with budget progress, category breakdowns, and daily spending patterns
+- **Activity Sharing**: Modal-based sharing system allowing activities to be copied or used as templates across multiple days
+- **Photo Upload**: Local photo storage system with image optimization and gallery view for activity documentation
+- **Location Integration**: Full integration between location service and activity creation with destination-based filtering
 
 **Checkpoint 3.3 Completed (June 2025)**:
 - **Daily Planner Interface**: Complete day-by-day planning interface with timeline view, day selector, and Hebrew RTL support

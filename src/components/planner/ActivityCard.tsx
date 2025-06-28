@@ -6,13 +6,17 @@ interface ActivityCardProps {
   on_drag_start: () => void
   on_update: (updates: Partial<VacationActivity>) => void
   on_delete: () => void
+  on_share?: () => void
+  show_share_button?: boolean
 }
 
 export const ActivityCard: React.FC<ActivityCardProps> = ({
   activity,
   on_drag_start,
   on_update,
-  on_delete
+  on_delete,
+  on_share,
+  show_share_button = true
 }) => {
   const [is_editing, set_is_editing] = useState(false)
   const [edit_values, set_edit_values] = useState({
@@ -182,6 +186,17 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
         </div>
 
         <div className="flex items-center space-x-1 rtl:space-x-reverse">
+          {show_share_button && on_share && (
+            <button
+              onClick={on_share}
+              className="p-1 text-gray-400 hover:text-green-600 transition-colors"
+              title="שתף לימים אחרים"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
+              </svg>
+            </button>
+          )}
           <button
             onClick={() => set_is_editing(true)}
             className="p-1 text-gray-400 hover:text-blue-600 transition-colors"
