@@ -43,7 +43,11 @@
       "Bash(gh run list:*)",
       "mcp__fetch-mcp__fetch_html",
       "WebFetch(domain:api.github.com)",
-      "mcp__github__create_or_update_file"
+      "mcp__github__create_or_update_file",
+      "mcp__playwright__browser_navigate",
+      "mcp__playwright__browser_install",
+      "mcp__playwright__browser_console_messages",
+      "mcp__playwright__browser_network_requests"
     ],
     "deny": []
   }
