@@ -104,6 +104,20 @@ self.addEventListener('fetch', (event) => {
     return
   }
 
+  // Skip unsupported URL schemes (chrome-extension, moz-extension, etc.)
+  if (!['http:', 'https:'].includes(url.protocol)) {
+    return
+  }
+
+  // Skip Chrome extension requests and other browser-specific requests
+  if (url.protocol === 'chrome-extension:' || 
+      url.protocol === 'moz-extension:' || 
+      url.protocol === 'ms-browser-extension:' ||
+      url.href.includes('chrome-extension://') ||
+      url.href.includes('moz-extension://')) {
+    return
+  }
+
   // Determine caching strategy based on URL patterns
   let strategy = null
   
@@ -173,7 +187,11 @@ async function staleWhileRevalidateStrategy(request) {
   // Fetch in background to update cache
   const fetchPromise = fetch(request).then(async (networkResponse) => {
     if (networkResponse.ok) {
-      await cache.put(request, networkResponse.clone())
+      // Only cache http/https requests, skip chrome-extension etc.
+      const url = new URL(request.url)
+      if (['http:', 'https:'].includes(url.protocol)) {
+        await cache.put(request, networkResponse.clone())
+      }
     }
     return networkResponse
   }).catch(error => {
@@ -202,8 +220,12 @@ async function networkFirstStrategy(request) {
     const networkResponse = await fetch(request)
     
     if (networkResponse.ok) {
-      const cache = await caches.open(DYNAMIC_CACHE_NAME)
-      cache.put(request, networkResponse.clone())
+      // Only cache http/https requests, skip chrome-extension etc.
+      const url = new URL(request.url)
+      if (['http:', 'https:'].includes(url.protocol)) {
+        const cache = await caches.open(DYNAMIC_CACHE_NAME)
+        cache.put(request, networkResponse.clone())
+      }
     }
     
     return networkResponse
@@ -242,8 +264,12 @@ async function cacheFirstStrategy(request) {
     const networkResponse = await fetch(request)
     
     if (networkResponse.ok) {
-      const cache = await caches.open(STATIC_CACHE_NAME)
-      cache.put(request, networkResponse.clone())
+      // Only cache http/https requests, skip chrome-extension etc.
+      const url = new URL(request.url)
+      if (['http:', 'https:'].includes(url.protocol)) {
+        const cache = await caches.open(STATIC_CACHE_NAME)
+        cache.put(request, networkResponse.clone())
+      }
     }
     
     return networkResponse
@@ -260,8 +286,12 @@ async function networkFirstWithOfflineFallback(request) {
     const networkResponse = await fetch(request)
     
     if (networkResponse.ok) {
-      const cache = await caches.open(DYNAMIC_CACHE_NAME)
-      cache.put(request, networkResponse.clone())
+      // Only cache http/https requests, skip chrome-extension etc.
+      const url = new URL(request.url)
+      if (['http:', 'https:'].includes(url.protocol)) {
+        const cache = await caches.open(DYNAMIC_CACHE_NAME)
+        cache.put(request, networkResponse.clone())
+      }
     }
     
     return networkResponse
