@@ -4,10 +4,13 @@ import { use_vacation_store } from '../../stores/vacation_store'
 import { use_translation } from '../../hooks/use_translation'
 
 interface VacationCreateModalProps {
-  on_close: () => void
+  on_close?: () => void
+  isOpen?: boolean
+  onClose?: () => void
+  onSuccess?: () => void
 }
 
-const VacationCreateModal: React.FC<VacationCreateModalProps> = ({ on_close }) => {
+const VacationCreateModal: React.FC<VacationCreateModalProps> = ({ on_close, onClose, onSuccess }) => {
   const { t } = use_translation()
   const { add_vacation } = use_vacation_store()
   const [loading, set_loading] = useState(false)

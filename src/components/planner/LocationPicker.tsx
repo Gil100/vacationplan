@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Location, LocationType } from '../../types'
 import { location_service, LocationSearchFilters } from '../../services/location_service'
-import { use_translations } from '../../hooks/use_translations'
+import { use_translation } from '../../hooks/use_translation'
 import { Input } from '../ui/Input'
 import { Button } from '../ui/Button'
 import { Card } from '../ui/Card'
@@ -25,7 +25,7 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
   show_suggestions = true,
   className = ''
 }) => {
-  const { t } = use_translations()
+  const { t } = use_translation()
   const [query, set_query] = useState(value?.name || '')
   const [suggestions, set_suggestions] = useState<Location[]>([])
   const [is_open, set_is_open] = useState(false)
@@ -136,7 +136,8 @@ export const LocationPicker: React.FC<LocationPickerProps> = ({
       [LocationType.PARK]: 'פארק',
       [LocationType.MUSEUM]: 'מוזיאון',
       [LocationType.SHOPPING_CENTER]: 'מרכז קניות',
-      [LocationType.TRANSPORTATION_HUB]: 'תחבורה'
+      [LocationType.TRANSPORTATION_HUB]: 'תחבורה',
+      [LocationType.ENTERTAINMENT]: 'בידור'
     }
     return type_labels[type] || type
   }

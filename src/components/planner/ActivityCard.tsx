@@ -8,6 +8,7 @@ interface ActivityCardProps {
   on_delete: () => void
   on_share?: () => void
   show_share_button?: boolean
+  is_dragging?: boolean
 }
 
 export const ActivityCard: React.FC<ActivityCardProps> = ({
@@ -16,7 +17,8 @@ export const ActivityCard: React.FC<ActivityCardProps> = ({
   on_update,
   on_delete,
   on_share,
-  show_share_button = true
+  show_share_button = true,
+  is_dragging = false
 }) => {
   const [is_editing, set_is_editing] = useState(false)
   const [edit_values, set_edit_values] = useState({

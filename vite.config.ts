@@ -14,21 +14,57 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
-    sourcemap: false, // Disable for production
+    sourcemap: false,
     rollupOptions: {
       output: {
-        // Optimize chunk splitting for better caching
+        // Optimized chunk splitting
         manualChunks: {
-          vendor: ['react', 'react-dom'],
-          ui: ['./src/components/ui'],
+          'react-vendor': ['react', 'react-dom'],
+          'router': ['react-router-dom'],
+          'dnd': ['@dnd-kit/core', '@dnd-kit/sortable', '@dnd-kit/utilities'],
+          'state': ['zustand'],
+          'date-utils': ['date-fns'],
+          'icons': ['lucide-react'],
+          'utils': ['clsx', 'tailwind-merge', 'qrcode.react'],
+        },
+        // Optimize asset naming for better caching
+        chunkFileNames: 'assets/[name].[hash].js',
+        entryFileNames: 'assets/[name].[hash].js',
+        assetFileNames: (assetInfo) => {
+          const info = assetInfo.name?.split('.') || []
+          const ext = info[info.length - 1]
+          if (/png|jpe?g|svg|gif|tiff|bmp|ico|webp/i.test(ext)) {
+            return `assets/images/[name].[hash][extname]`
+          }
+          if (/woff2?|eot|ttf|otf/i.test(ext)) {
+            return `assets/fonts/[name].[hash][extname]`
+          }
+          return `assets/[name].[hash][extname]`
         },
       },
     },
-    // Optimize for production
+    // Production optimizations
     minify: 'terser',
-    target: 'es2015',
+    target: 'es2020',
     cssCodeSplit: true,
+    chunkSizeWarningLimit: 500,
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+        passes: 2,
+      },
+      mangle: true,
+      output: {
+        comments: false,
+      },
+    },
+    reportCompressedSize: true,
+    // Asset optimization
+    assetsInlineLimit: 4096, // Inline small assets (< 4KB) as base64
   },
+  // Asset handling optimizations
+  assetsInclude: ['**/*.webp', '**/*.avif'],
   server: {
     port: 3000,
     open: true,

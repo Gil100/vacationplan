@@ -1,6 +1,7 @@
 import React from 'react'
 import { VacationActivity } from '../../stores/vacation_store'
 import { format_hebrew_date } from '../../utils/date_utils'
+import { use_mobile_touch } from '../../hooks/use_mobile_touch'
 
 interface DaySelectorProps {
   total_days: number
@@ -17,6 +18,18 @@ export const DaySelector: React.FC<DaySelectorProps> = ({
   start_date,
   activities
 }) => {
+  const { touch_handlers } = use_mobile_touch({
+    on_swipe_up: () => {
+      if (selected_day > 1) {
+        on_day_select(selected_day - 1)
+      }
+    },
+    on_swipe_down: () => {
+      if (selected_day < total_days) {
+        on_day_select(selected_day + 1)
+      }
+    }
+  })
   const get_day_activity_count = (day: number): number => {
     return activities.filter(activity => activity.day === day).length
   }
@@ -42,7 +55,7 @@ export const DaySelector: React.FC<DaySelectorProps> = ({
   }
 
   return (
-    <div className="space-y-2 p-4">
+    <div className="space-y-2 p-4 swipe-area" {...touch_handlers}>
       {Array.from({ length: total_days }, (_, index) => {
         const day = index + 1
         const date = get_day_date(day)
@@ -54,7 +67,7 @@ export const DaySelector: React.FC<DaySelectorProps> = ({
           <button
             key={day}
             onClick={() => on_day_select(day)}
-            className={`w-full p-3 rounded-lg text-right transition-all ${
+            className={`w-full p-3 rounded-lg text-right transition-all touch-target touch-feedback ${
               is_selected
                 ? 'bg-blue-600 text-white shadow-md'
                 : 'bg-white hover:bg-gray-50 border border-gray-200'

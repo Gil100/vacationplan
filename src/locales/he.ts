@@ -18,7 +18,8 @@ export const he_translations = {
     next: 'הבא',
     previous: 'הקודם',
     required: 'שדה חובה',
-    optional: 'אופציונלי'
+    optional: 'אופציונלי',
+    search_location: 'חפש מיקום'
   },
 
   // Navigation

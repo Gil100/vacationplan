@@ -108,7 +108,8 @@ export enum LocationType {
   PARK = 'park',
   MUSEUM = 'museum',
   SHOPPING_CENTER = 'shopping_center',
-  TRANSPORTATION_HUB = 'transportation_hub'
+  TRANSPORTATION_HUB = 'transportation_hub',
+  ENTERTAINMENT = 'entertainment'
 }
 
 // UI State types

@@ -1,6 +1,6 @@
 import React from 'react'
 import { ActivityCategory } from '../../types'
-import { use_translations } from '../../hooks/use_translations'
+import { use_translation } from '../../hooks/use_translation'
 import { Button } from '../ui/Button'
 
 interface CategoryFilterProps {
@@ -16,7 +16,7 @@ export const CategoryFilter: React.FC<CategoryFilterProps> = ({
   show_all_option = true,
   className = ''
 }) => {
-  const { t } = use_translations()
+  const { t } = use_translation()
 
   const categories = [
     { value: ActivityCategory.ATTRACTION, label: 'אטרקציות', icon: '🏛️', color: 'bg-blue-100 text-blue-700' },

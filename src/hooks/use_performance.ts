@@ -1,145 +1,173 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useCallback, useState, useRef } from 'react'
 
-// Performance monitoring hook
-export const use_performance = (component_name: string) => {
-  const start_time = useRef<number>(Date.now())
-  const mount_time = useRef<number | null>(null)
-  
+interface PerformanceMetrics {
+  memory_usage: number
+  component_render_time: number
+  total_components: number
+  slow_components: string[]
+  bundle_size: number
+  cache_hit_ratio: number
+}
+
+interface UsePerformanceOptions {
+  enable_monitoring?: boolean
+  slow_threshold_ms?: number
+  memory_check_interval?: number
+}
+
+export const use_performance = (options: UsePerformanceOptions = {}) => {
+  const {
+    enable_monitoring = process.env.NODE_ENV === 'development',
+    slow_threshold_ms = 16, // 60fps threshold
+    memory_check_interval = 10000
+  } = options
+
+  const [metrics, set_metrics] = useState<PerformanceMetrics>({
+    memory_usage: 0,
+    component_render_time: 0,
+    total_components: 0,
+    slow_components: [],
+    bundle_size: 0,
+    cache_hit_ratio: 0
+  })
+
+  const render_times = useRef<Map<string, number>>(new Map())
+  const component_count = useRef(0)
+
+  // Monitor memory usage
   useEffect(() => {
-    // Component mounted
-    mount_time.current = Date.now()
-    const mount_duration = mount_time.current - start_time.current
-    
-    if (process.env.NODE_ENV === 'development') {
-      console.log(`⚡ ${component_name} mounted in ${mount_duration}ms`)
-    }
-    
-    // Cleanup on unmount
-    return () => {
-      const unmount_time = Date.now()
-      const total_duration = unmount_time - start_time.current
-      
-      if (process.env.NODE_ENV === 'development') {
-        console.log(`⚡ ${component_name} total lifecycle: ${total_duration}ms`)
+    if (!enable_monitoring) return
+
+    const check_memory = () => {
+      if ('memory' in performance) {
+        const memory = (performance as any).memory
+        const usage_mb = memory.usedJSHeapSize / 1024 / 1024
+        
+        set_metrics(prev => ({
+          ...prev,
+          memory_usage: usage_mb
+        }))
+
+        // Warn if memory usage is high
+        if (usage_mb > 50) {
+          console.warn(`High memory usage detected: ${usage_mb.toFixed(2)}MB`)
+        }
       }
     }
-  }, [component_name])
-  
-  const measure_operation = (operation_name: string, operation: () => void | Promise<void>) => {
-    const operation_start = performance.now()
+
+    check_memory()
+    const interval = setInterval(check_memory, memory_check_interval)
     
-    const result = operation()
-    
-    if (result instanceof Promise) {
-      return result.finally(() => {
-        const operation_end = performance.now()
-        const duration = operation_end - operation_start
-        
-        if (process.env.NODE_ENV === 'development') {
-          console.log(`⚡ ${component_name}.${operation_name}: ${duration.toFixed(2)}ms`)
+    return () => clearInterval(interval)
+  }, [enable_monitoring, memory_check_interval])
+
+  // Component render time tracking
+  const start_render_timing = useCallback((component_name: string) => {
+    if (!enable_monitoring) return
+
+    const start_time = performance.now()
+    render_times.current.set(component_name, start_time)
+    component_count.current++
+  }, [enable_monitoring])
+
+  const end_render_timing = useCallback((component_name: string) => {
+    if (!enable_monitoring) return
+
+    const start_time = render_times.current.get(component_name)
+    if (start_time) {
+      const render_time = performance.now() - start_time
+      
+      set_metrics(prev => {
+        const new_slow_components = render_time > slow_threshold_ms
+          ? [...prev.slow_components.filter(name => name !== component_name), component_name]
+          : prev.slow_components.filter(name => name !== component_name)
+
+        return {
+          ...prev,
+          component_render_time: render_time,
+          total_components: component_count.current,
+          slow_components: new_slow_components
         }
       })
-    } else {
-      const operation_end = performance.now()
-      const duration = operation_end - operation_start
-      
-      if (process.env.NODE_ENV === 'development') {
-        console.log(`⚡ ${component_name}.${operation_name}: ${duration.toFixed(2)}ms`)
+
+      if (render_time > slow_threshold_ms) {
+        console.warn(`Slow component detected: ${component_name} took ${render_time.toFixed(2)}ms to render`)
       }
-      
-      return result
+
+      render_times.current.delete(component_name)
     }
-  }
-  
-  return { measure_operation }
-}
+  }, [enable_monitoring, slow_threshold_ms])
 
-// Web Vitals monitoring
-export const measure_web_vitals = () => {
-  if (typeof window === 'undefined') return
-  
-  // Measure First Contentful Paint
-  const measure_fcp = () => {
-    const observer = new PerformanceObserver((list) => {
-      for (const entry of list.getEntries()) {
-        if (entry.name === 'first-contentful-paint') {
-          console.log(`⚡ First Contentful Paint: ${entry.startTime.toFixed(2)}ms`)
-          observer.disconnect()
-        }
-      }
-    })
-    
-    observer.observe({ entryTypes: ['paint'] })
-  }
-  
-  // Measure Largest Contentful Paint
-  const measure_lcp = () => {
-    const observer = new PerformanceObserver((list) => {
-      const entries = list.getEntries()
-      const last_entry = entries[entries.length - 1]
-      
-      console.log(`⚡ Largest Contentful Paint: ${last_entry.startTime.toFixed(2)}ms`)
-    })
-    
-    observer.observe({ entryTypes: ['largest-contentful-paint'] })
-  }
-  
-  // Measure Cumulative Layout Shift
-  const measure_cls = () => {
-    let cls_value = 0
-    
-    const observer = new PerformanceObserver((list) => {
-      for (const entry of list.getEntries()) {
-        if (!(entry as any).hadRecentInput) {
-          cls_value += (entry as any).value
-        }
-      }
-      
-      console.log(`⚡ Cumulative Layout Shift: ${cls_value.toFixed(4)}`)
-    })
-    
-    observer.observe({ entryTypes: ['layout-shift'] })
-  }
-  
-  // Only run in browser
-  if (typeof window !== 'undefined' && 'PerformanceObserver' in window) {
-    measure_fcp()
-    measure_lcp()
-    measure_cls()
-  }
-}
+  // Performance optimization suggestions
+  const get_optimization_suggestions = useCallback(() => {
+    const suggestions: string[] = []
 
-// Resource timing monitoring
-export const measure_resource_timing = () => {
-  if (typeof window === 'undefined') return
-  
-  const observer = new PerformanceObserver((list) => {
-    for (const entry of list.getEntries()) {
-      const resource = entry as PerformanceResourceTiming
-      
-      if (resource.duration > 1000) { // Only log slow resources
-        console.log(`⚠️ Slow resource: ${resource.name} took ${resource.duration.toFixed(2)}ms`)
-      }
+    if (metrics.memory_usage > 50) {
+      suggestions.push('זיכרון גבוה - שקול lazy loading או memoization')
     }
-  })
-  
-  if ('PerformanceObserver' in window) {
-    observer.observe({ entryTypes: ['resource'] })
+
+    if (metrics.slow_components.length > 0) {
+      suggestions.push(`רכיבים איטיים זוהו: ${metrics.slow_components.join(', ')}`)
+    }
+
+    if (metrics.bundle_size > 500) {
+      suggestions.push('גודל bundle גדול - שקול code splitting')
+    }
+
+    if (metrics.cache_hit_ratio < 0.7) {
+      suggestions.push('יעילות cache נמוכה - בדוק אסטרטגיית caching')
+    }
+
+    return suggestions
+  }, [metrics])
+
+  return {
+    metrics,
+    start_render_timing,
+    end_render_timing,
+    optimization_suggestions: get_optimization_suggestions()
   }
 }
 
-// Memory usage monitoring (Chrome only)
-export const measure_memory_usage = () => {
-  if (typeof window === 'undefined') return
-  
-  // @ts-ignore - performance.memory is Chrome-specific
-  const memory = (performance as any).memory
-  
-  if (memory) {
-    const used = Math.round(memory.usedJSHeapSize / 1048576 * 100) / 100
-    const total = Math.round(memory.totalJSHeapSize / 1048576 * 100) / 100
-    const limit = Math.round(memory.jsHeapSizeLimit / 1048576 * 100) / 100
-    
-    console.log(`⚡ Memory: ${used}MB / ${total}MB (limit: ${limit}MB)`)
-  }
+// Hook for debouncing expensive operations
+export const use_debounced_callback = <T extends (...args: any[]) => any>(
+  callback: T,
+  delay: number
+) => {
+  const callback_ref = useRef(callback)
+  const timeout_ref = useRef<NodeJS.Timeout>()
+
+  useEffect(() => {
+    callback_ref.current = callback
+  }, [callback])
+
+  return useCallback((...args: Parameters<T>) => {
+    if (timeout_ref.current) {
+      clearTimeout(timeout_ref.current)
+    }
+
+    timeout_ref.current = setTimeout(() => {
+      callback_ref.current(...args)
+    }, delay)
+  }, [delay]) as T
+}
+
+// Hook for throttling expensive operations
+export const use_throttled_callback = <T extends (...args: any[]) => any>(
+  callback: T,
+  delay: number
+) => {
+  const callback_ref = useRef(callback)
+  const last_run = useRef<number>(0)
+
+  useEffect(() => {
+    callback_ref.current = callback
+  }, [callback])
+
+  return useCallback((...args: Parameters<T>) => {
+    if (Date.now() - last_run.current >= delay) {
+      callback_ref.current(...args)
+      last_run.current = Date.now()
+    }
+  }, [delay]) as T
 }

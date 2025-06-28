@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>אופליין - תכנון חופשות</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@300;400;500;600;700&family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Assistant', 'Heebo', system-ui, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #1f2937;
+      line-height: 1.6;
+    }
+    
+    .container {
+      background: white;
+      padding: 3rem;
+      border-radius: 1rem;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      text-align: center;
+      max-width: 500px;
+      margin: 1rem;
+    }
+    
+    .icon {
+      font-size: 4rem;
+      margin-bottom: 1.5rem;
+      display: block;
+    }
+    
+    h1 {
+      font-size: 2rem;
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 1rem;
+      font-family: 'Heebo', 'Assistant', system-ui, sans-serif;
+    }
+    
+    .subtitle {
+      font-size: 1.125rem;
+      color: #6b7280;
+      margin-bottom: 2rem;
+    }
+    
+    .message {
+      color: #374151;
+      margin-bottom: 2rem;
+      font-size: 1rem;
+    }
+    
+    .features {
+      background: #f9fafb;
+      padding: 1.5rem;
+      border-radius: 0.5rem;
+      margin-bottom: 2rem;
+      text-align: start;
+    }
+    
+    .features h3 {
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: #1f2937;
+    }
+    
+    .features ul {
+      list-style: none;
+      padding: 0;
+    }
+    
+    .features li {
+      padding: 0.5rem 0;
+      color: #374151;
+      display: flex;
+      align-items: center;
+    }
+    
+    .features li::before {
+      content: "✓";
+      color: #10b981;
+      font-weight: bold;
+      margin-left: 0.5rem;
+      margin-right: 0.5rem;
+    }
+    
+    .buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    
+    button {
+      background: #3b82f6;
+      color: white;
+      border: none;
+      padding: 0.875rem 1.75rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 500;
+      font-family: inherit;
+      transition: all 0.2s ease;
+      min-width: 140px;
+    }
+    
+    button:hover {
+      background: #2563eb;
+      transform: translateY(-1px);
+    }
+    
+    .btn-secondary {
+      background: #6b7280;
+    }
+    
+    .btn-secondary:hover {
+      background: #4b5563;
+    }
+    
+    .status {
+      margin-top: 2rem;
+      padding: 1rem;
+      background: #fef3c7;
+      border: 1px solid #f59e0b;
+      border-radius: 0.5rem;
+      color: #92400e;
+      font-size: 0.875rem;
+    }
+    
+    .connection-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      color: #6b7280;
+      margin-top: 1rem;
+    }
+    
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ef4444;
+      animation: pulse 2s infinite;
+    }
+    
+    .dot.online {
+      background: #10b981;
+      animation: none;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    
+    @media (max-width: 640px) {
+      .container {
+        padding: 2rem;
+        margin: 0.5rem;
+      }
+      
+      h1 {
+        font-size: 1.75rem;
+      }
+      
+      .buttons {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      button {
+        width: 100%;
+        max-width: 250px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <span class="icon">✈️</span>
+    <h1>אין חיבור לאינטרנט</h1>
+    <p class="subtitle">האפליקציה עובדת גם ללא חיבור</p>
+    
+    <div class="message">
+      <p>נראה שאין לך חיבור לאינטרנט כרגע, אבל אתה עדיין יכול להשתמש באפליקציה!</p>
+    </div>
+    
+    <div class="features">
+      <h3>מה אתה יכול לעשות אופליין:</h3>
+      <ul>
+        <li>צפייה בחופשות ששמרת</li>
+        <li>עריכת מסלולים יומיים</li>
+        <li>הוספת פעילויות חדשות</li>
+        <li>ניהול תקציב החופשה</li>
+        <li>צפייה בתמונות ששמרת</li>
+      </ul>
+    </div>
+    
+    <div class="buttons">
+      <button onclick="tryReconnect()">נסה להתחבר שוב</button>
+      <button class="btn-secondary" onclick="goOffline()">המשך אופליין</button>
+    </div>
+    
+    <div class="connection-indicator">
+      <span class="dot" id="connectionDot"></span>
+      <span id="connectionStatus">מנסה להתחבר...</span>
+    </div>
+    
+    <div class="status" id="syncStatus" style="display: none;">
+      השינויים שלך יישמרו ויסתנכרנו כשהחיבור יחזור
+    </div>
+  </div>
+
+  <script>
+    let isOnline = false;
+    
+    function updateConnectionStatus() {
+      const dot = document.getElementById('connectionDot');
+      const status = document.getElementById('connectionStatus');
+      const syncStatus = document.getElementById('syncStatus');
+      
+      if (navigator.onLine) {
+        dot.classList.add('online');
+        status.textContent = 'מחובר לאינטרנט';
+        syncStatus.style.display = 'none';
+        
+        // Try to reload the main app
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 1000);
+      } else {
+        dot.classList.remove('online');
+        status.textContent = 'לא מחובר לאינטרנט';
+        syncStatus.style.display = 'block';
+      }
+    }
+    
+    function tryReconnect() {
+      updateConnectionStatus();
+      
+      if (navigator.onLine) {
+        window.location.href = '/';
+      } else {
+        // Show a brief message
+        const button = event.target;
+        const originalText = button.textContent;
+        button.textContent = 'בודק חיבור...';
+        button.disabled = true;
+        
+        setTimeout(() => {
+          button.textContent = originalText;
+          button.disabled = false;
+          updateConnectionStatus();
+        }, 2000);
+      }
+    }
+    
+    function goOffline() {
+      // Try to navigate to cached version
+      window.location.href = '/';
+    }
+    
+    // Listen for online/offline events
+    window.addEventListener('online', updateConnectionStatus);
+    window.addEventListener('offline', updateConnectionStatus);
+    
+    // Initial status check
+    updateConnectionStatus();
+    
+    // Periodic connectivity check
+    setInterval(updateConnectionStatus, 5000);
+  </script>
+</body>
+</html>

@@ -2,17 +2,59 @@
 <html lang="he" dir="rtl">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vacationplan/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="/vacationplan/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>תכנון חופשות - מתכננים לכם את החופשה המושלמת</title>
     <meta name="description" content="מערכת תכנון חופשות מתקדמת למשפחות ישראליות. צרו תוכנית יום יומית מפורטת לחופשה המושלמת שלכם." />
+    
+    <!-- Performance optimizations -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@200;300;400;500;600;700;800&family=Heebo:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <script type="module" crossorigin src="/vacationplan/assets/index-dRmtrz2K.js"></script>
-    <link rel="modulepreload" crossorigin href="/vacationplan/assets/vendor-CyvzqkFf.js">
-    <link rel="modulepreload" crossorigin href="/vacationplan/assets/ui-CnO8vT_7.js">
-    <link rel="stylesheet" crossorigin href="/vacationplan/assets/index-PJZVQHeB.css">
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700&family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700&family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
+    
+    <!-- DNS prefetch for external resources -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    
+    <!-- Preload critical resources for better LCP -->
+    <link rel="modulepreload" href="data:application/octet-stream;base64,aW1wb3J0IHsgU3RyaWN0TW9kZSB9IGZyb20gJ3JlYWN0JwppbXBvcnQgeyBjcmVhdGVSb290IH0gZnJvbSAncmVhY3QtZG9tL2NsaWVudCcKaW1wb3J0ICcuL2luZGV4LmNzcycKaW1wb3J0IEFwcCBmcm9tICcuL0FwcC50c3gnCgpjcmVhdGVSb290KGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdyb290JykhKS5yZW5kZXIoCiAgPFN0cmljdE1vZGU+CiAgICA8QXBwIC8+CiAgPC9TdHJpY3RNb2RlPiwKKQ==">
+    
+    <!-- Optimize resource hints for Core Web Vitals -->
+    <meta name="color-scheme" content="light">
+    <meta name="theme-color" content="#3b82f6">
+    
+    <!-- Critical CSS for better FCP/LCP -->
+    <style>
+      /* Critical above-the-fold styles */
+      html { direction: rtl; font-family: 'Assistant', 'Heebo', system-ui, sans-serif; }
+      body { background-color: #f9fafb; color: #111827; line-height: 1.7; margin: 0; }
+      #root { min-height: 100vh; }
+      .hebrew-text { font-family: 'Assistant', 'Heebo', system-ui, sans-serif; line-height: 1.7; text-align: right; }
+      
+      /* Loading state optimization */
+      .loading-spinner { 
+        animation: spin 1s linear infinite; 
+        border: 2px solid #e5e7eb; 
+        border-top: 2px solid #3b82f6; 
+        border-radius: 50%; 
+        width: 32px; 
+        height: 32px; 
+        margin: 0 auto;
+      }
+      @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+      
+      /* Prevent layout shift */
+      .min-h-screen { min-height: 100vh; }
+      .flex { display: flex; }
+      .items-center { align-items: center; }
+      .justify-center { justify-content: center; }
+    </style>
+    <script type="module" crossorigin src="/vacationplan/assets/index.PXVTesPP.js"></script>
+    <link rel="modulepreload" crossorigin href="/vacationplan/assets/react-vendor.DvkiJRO2.js">
+    <link rel="modulepreload" crossorigin href="/vacationplan/assets/router.j8bC8aKS.js">
+    <link rel="modulepreload" crossorigin href="/vacationplan/assets/icons.42uSUzJ0.js">
+    <link rel="stylesheet" crossorigin href="/vacationplan/assets/index.C031ftvQ.css">
   </head>
   <body>
     <div id="root"></div>

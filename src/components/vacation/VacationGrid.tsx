@@ -6,18 +6,18 @@ import EmptyState from './EmptyState'
 import LoadingState from './LoadingState'
 
 interface VacationGridProps {
-  vacations: Vacation[]
-  loading: boolean
-  error: string | null
-  view_mode: 'grid' | 'list'
+  vacations?: Vacation[]
+  loading?: boolean
+  error?: string | null
+  view_mode?: 'grid' | 'list'
   on_create_vacation?: () => void
 }
 
 const VacationGrid: React.FC<VacationGridProps> = ({
-  vacations,
-  loading,
-  error,
-  view_mode,
+  vacations = [],
+  loading = false,
+  error = null,
+  view_mode = 'grid',
   on_create_vacation
 }) => {
   if (loading) {

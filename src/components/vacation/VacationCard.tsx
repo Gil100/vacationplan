@@ -48,12 +48,12 @@ const VacationCard: React.FC<VacationCardProps> = ({ vacation }) => {
   ) + 1
 
   return (
-    <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-200 group">
+    <Card className="overflow-hidden hover:shadow-lg transition-all duration-200 group touch-feedback">
       {/* Header with gradient background */}
-      <div className="h-32 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 relative">
+      <div className="h-32 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 relative touch-area">
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="absolute top-4 right-4">
-          <span className={`px-2 py-1 rounded-full text-xs font-medium ${get_status_color(vacation.status)}`}>
+          <span className={`px-3 py-1.5 rounded-full text-xs font-medium min-h-[32px] flex items-center ${get_status_color(vacation.status)}`}>
             {get_status_text(vacation.status)}
           </span>
         </div>
@@ -106,12 +106,12 @@ const VacationCard: React.FC<VacationCardProps> = ({ vacation }) => {
         </div>
 
         {/* Actions */}
-        <div className="flex gap-2">
+        <div className="flex gap-3">
           <Button
             variant="outline"
             size="sm"
             onClick={handle_edit}
-            className="flex-1 text-sm"
+            className="flex-1 text-sm touch-target-large"
           >
             ערוך
           </Button>
@@ -119,7 +119,7 @@ const VacationCard: React.FC<VacationCardProps> = ({ vacation }) => {
             variant="outline"
             size="sm"
             onClick={handle_delete}
-            className="text-red-600 hover:text-red-700 hover:border-red-300"
+            className="text-red-600 hover:text-red-700 hover:border-red-300 px-4 touch-target-large"
           >
             מחק
           </Button>

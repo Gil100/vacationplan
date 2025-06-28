@@ -1,12 +1,15 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, Suspense, lazy } from 'react'
 import { Container } from '../components/ui'
 import { use_vacations, Vacation } from '../stores/vacation_store'
 import { use_translation } from '../hooks/use_translation'
 import VacationGrid from '../components/vacation/VacationGrid'
-import VacationCreateModal from '../components/vacation/VacationCreateModal'
 import DashboardHeader from '../components/dashboard/DashboardHeader'
 import DashboardStats from '../components/dashboard/DashboardStats'
 import SearchAndFilter, { FilterOptions } from '../components/dashboard/SearchAndFilter'
+import { ComponentLoader } from '../utils/lazy_loading'
+
+// Lazy load the modal component since it's only needed when creating a vacation
+const VacationCreateModal = lazy(() => import('../components/vacation/VacationCreateModal'))
 
 const DashboardPage: React.FC = () => {
   const { t } = use_translation()
@@ -107,9 +110,11 @@ const DashboardPage: React.FC = () => {
         />
 
         {show_create_modal && (
-          <VacationCreateModal 
-            on_close={() => set_show_create_modal(false)}
-          />
+          <Suspense fallback={<ComponentLoader />}>
+            <VacationCreateModal 
+              on_close={() => set_show_create_modal(false)}
+            />
+          </Suspense>
         )}
       </Container>
     </div>

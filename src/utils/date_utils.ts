@@ -15,7 +15,10 @@ export const format_date_hebrew = (date: Date | string): string => {
 export const format_time = (time: string): string => {
   try {
     const [hours, minutes] = time.split(':')
-    return `${hours}:${minutes}`
+    if (hours && minutes !== undefined) {
+      return `${hours}:${minutes}`
+    }
+    return time
   } catch {
     return time
   }

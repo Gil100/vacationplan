@@ -1,6 +1,7 @@
 import { ReactNode } from 'react'
 import Header from './Header'
 import Footer from './Footer'
+import { OfflineIndicator } from '../offline/OfflineIndicator'
 
 interface LayoutProps {
   children: ReactNode
@@ -9,6 +10,7 @@ interface LayoutProps {
 const Layout = ({ children }: LayoutProps) => {
   return (
     <div className="min-h-screen bg-gray-50 rtl flex flex-col">
+      <OfflineIndicator show_when_online={true} position="top" />
       <Header />
       
       <main className="flex-1">

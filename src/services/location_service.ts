@@ -1,5 +1,5 @@
 import { Location, LocationType, Coordinates } from '../types'
-import { popular_destinations } from '../constants'
+import { POPULAR_DESTINATIONS } from '../constants'
 
 // Mock location data - Israeli destinations
 const israeli_locations: Location[] = [
@@ -206,7 +206,7 @@ export class LocationService {
 
   // Get popular destinations
   get_popular_destinations = (): string[] => {
-    return popular_destinations
+    return POPULAR_DESTINATIONS as unknown as string[]
   }
 }
 

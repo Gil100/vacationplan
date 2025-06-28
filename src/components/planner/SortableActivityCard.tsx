@@ -34,6 +34,7 @@ export const SortableActivityCard: React.FC<SortableActivityCardProps> = ({
     <div
       ref={setNodeRef}
       style={style}
+      className={`${isDragging ? 'z-50' : ''} touch-feedback drag-area`}
       {...attributes}
       {...listeners}
     >
@@ -42,6 +43,7 @@ export const SortableActivityCard: React.FC<SortableActivityCardProps> = ({
         on_drag_start={() => {}} // Not needed with dnd-kit
         on_update={on_update}
         on_delete={on_delete}
+        is_dragging={isDragging}
       />
     </div>
   )

@@ -7,12 +7,29 @@ import { ConflictDetector } from './ConflictDetector'
 import { DayActions } from './DayActions'
 import { format_hebrew_date } from '../../utils/date_utils'
 import { auto_schedule_activities, calculate_duration } from '../../utils/time_utils'
+import { use_mobile_touch, use_is_mobile } from '../../hooks/use_mobile_touch'
 
 export const DailyItineraryPlanner: React.FC = () => {
   const { current_vacation, activities } = use_current_vacation()
   const { update_activity } = use_activities()
   const [selected_day, set_selected_day] = useState<number>(1)
   const [sidebar_open, set_sidebar_open] = useState(false)
+  const is_mobile = use_is_mobile()
+
+  const { touch_handlers } = use_mobile_touch({
+    on_swipe_left: () => {
+      // In RTL: swipe left = next day
+      if (selected_day < vacation_days) {
+        set_selected_day(selected_day + 1)
+      }
+    },
+    on_swipe_right: () => {
+      // In RTL: swipe right = previous day  
+      if (selected_day > 1) {
+        set_selected_day(selected_day - 1)
+      }
+    }
+  })
   
   if (!current_vacation) {
     return (
@@ -54,7 +71,7 @@ export const DailyItineraryPlanner: React.FC = () => {
   return (
     <div className="flex h-full bg-gray-50">
       {/* Day Selector */}
-      <div className="w-64 bg-white shadow-sm border-l border-gray-200 overflow-y-auto">
+      <div className={`${is_mobile ? 'w-full md:w-64' : 'w-64'} bg-white shadow-sm border-l border-gray-200 overflow-y-auto ${is_mobile ? 'hidden md:block' : ''}`}>
         <div className="p-4 border-b border-gray-200">
           <h2 className="text-lg font-semibold text-gray-900">
             {current_vacation.title}
@@ -74,8 +91,37 @@ export const DailyItineraryPlanner: React.FC = () => {
       </div>
 
       {/* Main Timeline */}
-      <div className="flex-1 flex flex-col">
-        <div className="bg-white border-b border-gray-200 p-4">
+      <div className="flex-1 flex flex-col swipe-area" {...touch_handlers}>
+        <div className="bg-white border-b border-gray-200 p-4 safe-area-top">
+          {/* Mobile day navigation */}
+          {is_mobile && (
+            <div className="flex items-center justify-between mb-4 pb-4 border-b border-gray-100">
+              <button
+                onClick={() => selected_day > 1 && set_selected_day(selected_day - 1)}
+                disabled={selected_day <= 1}
+                className="touch-target flex items-center px-3 py-2 text-blue-600 disabled:text-gray-400 disabled:cursor-not-allowed"
+              >
+                <svg className="w-5 h-5 me-1" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
+                </svg>
+                יום קודם
+              </button>
+              <span className="text-sm text-gray-500">
+                יום {selected_day} מתוך {vacation_days}
+              </span>
+              <button
+                onClick={() => selected_day < vacation_days && set_selected_day(selected_day + 1)}
+                disabled={selected_day >= vacation_days}
+                className="touch-target flex items-center px-3 py-2 text-blue-600 disabled:text-gray-400 disabled:cursor-not-allowed"
+              >
+                יום הבא
+                <svg className="w-5 h-5 ms-1" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                </svg>
+              </button>
+            </div>
+          )}
+
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-xl font-semibold text-gray-900">
               יום {selected_day} - {format_hebrew_date(

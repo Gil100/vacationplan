@@ -2,13 +2,55 @@
 <html lang="he" dir="rtl">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>תכנון חופשות - מתכננים לכם את החופשה המושלמת</title>
     <meta name="description" content="מערכת תכנון חופשות מתקדמת למשפחות ישראליות. צרו תוכנית יום יומית מפורטת לחופשה המושלמת שלכם." />
+    
+    <!-- Performance optimizations -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@200;300;400;500;600;700;800&family=Heebo:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700&family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700&family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
+    
+    <!-- DNS prefetch for external resources -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    
+    <!-- Preload critical resources for better LCP -->
+    <link rel="modulepreload" href="/src/main.tsx">
+    <link rel="preload" href="/src/index.css" as="style">
+    
+    <!-- Optimize resource hints for Core Web Vitals -->
+    <meta name="color-scheme" content="light">
+    <meta name="theme-color" content="#3b82f6">
+    
+    <!-- Critical CSS for better FCP/LCP -->
+    <style>
+      /* Critical above-the-fold styles */
+      html { direction: rtl; font-family: 'Assistant', 'Heebo', system-ui, sans-serif; }
+      body { background-color: #f9fafb; color: #111827; line-height: 1.7; margin: 0; }
+      #root { min-height: 100vh; }
+      .hebrew-text { font-family: 'Assistant', 'Heebo', system-ui, sans-serif; line-height: 1.7; text-align: right; }
+      
+      /* Loading state optimization */
+      .loading-spinner { 
+        animation: spin 1s linear infinite; 
+        border: 2px solid #e5e7eb; 
+        border-top: 2px solid #3b82f6; 
+        border-radius: 50%; 
+        width: 32px; 
+        height: 32px; 
+        margin: 0 auto;
+      }
+      @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+      
+      /* Prevent layout shift */
+      .min-h-screen { min-height: 100vh; }
+      .flex { display: flex; }
+      .items-center { align-items: center; }
+      .justify-center { justify-content: center; }
+    </style>
   </head>
   <body>
     <div id="root"></div>

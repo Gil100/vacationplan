@@ -10,7 +10,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   required?: boolean
 }
 
-export const Input: React.FC<InputProps> = ({
+export const Input = React.forwardRef<HTMLInputElement, InputProps>(({
   label,
   error,
   help_text,
@@ -20,17 +20,17 @@ export const Input: React.FC<InputProps> = ({
   className = '',
   id,
   ...props
-}) => {
+}, ref) => {
   const { is_rtl } = use_rtl()
   const input_id = id || `input-${Math.random().toString(36).substr(2, 9)}`
 
-  const base_input_classes = 'block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 disabled:bg-gray-50 disabled:text-gray-500'
+  const base_input_classes = 'block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 disabled:bg-gray-50 disabled:text-gray-500 transition-all duration-150 min-h-[44px]'
   const error_classes = error ? 'border-red-300 text-red-900 placeholder-red-300 focus:border-red-500 focus:ring-red-500' : ''
   const padding_classes = (() => {
-    if (icon_start && icon_end) return 'ps-10 pe-10'
-    if (icon_start) return 'ps-10'
-    if (icon_end) return 'pe-10'
-    return 'px-3'
+    if (icon_start && icon_end) return 'ps-12 pe-12'
+    if (icon_start) return 'ps-12'
+    if (icon_end) return 'pe-12'
+    return 'px-4'
   })()
 
   return (
@@ -52,8 +52,9 @@ export const Input: React.FC<InputProps> = ({
         )}
         
         <input
+          ref={ref}
           id={input_id}
-          className={`${base_input_classes} ${error_classes} ${padding_classes} py-2`}
+          className={`${base_input_classes} ${error_classes} ${padding_classes} py-3`}
           dir={is_rtl ? 'rtl' : 'ltr'}
           {...props}
         />
@@ -80,4 +81,6 @@ export const Input: React.FC<InputProps> = ({
       )}
     </div>
   )
-}
+})
+
+Input.displayName = 'Input'
