@@ -2,21 +2,76 @@
 <html lang="he" dir="rtl">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="/vacationplan/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>תכנון חופשות - מתכננים לכם את החופשה המושלמת</title>
     <meta name="description" content="מערכת תכנון חופשות מתקדמת למשפחות ישראליות. צרו תוכנית יום יומית מפורטת לחופשה המושלמת שלכם." />
+    
+    <!-- Performance optimizations -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@200;300;400;500;600;700;800&family=Heebo:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700&family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700&family=Heebo:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
+    
+    <!-- DNS prefetch for external resources -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com">
+    <link rel="dns-prefetch" href="//fonts.gstatic.com">
+    
+    <!-- Meta configuration -->
+    <meta name="format-detection" content="telephone=no">
+    <meta name="color-scheme" content="light">
+    <meta name="theme-color" content="#3b82f6">
+    
+    <!-- Critical CSS for consistent styling during redirect -->
+    <style>
+      html { direction: rtl; font-family: 'Assistant', 'Heebo', system-ui, sans-serif; }
+      body { background-color: #f9fafb; color: #111827; line-height: 1.7; margin: 0; }
+      #root { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+      .loading { text-align: center; }
+      .loading-spinner { 
+        animation: spin 1s linear infinite; 
+        border: 2px solid #e5e7eb; 
+        border-top: 2px solid #3b82f6; 
+        border-radius: 50%; 
+        width: 32px; 
+        height: 32px; 
+        margin: 0 auto 16px;
+      }
+      @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+      .hebrew-text { font-family: 'Assistant', 'Heebo', system-ui, sans-serif; line-height: 1.7; text-align: right; }
+    </style>
+    
     <script>
-      // GitHub Pages SPA redirect
-      // Store the current path and redirect to index.html
-      sessionStorage.setItem('ghpagesRedirect', window.location.pathname + window.location.search + window.location.hash);
-      window.location.replace('/vacationplan/');
+      // GitHub Pages SPA redirect with improved error handling
+      try {
+        // Store the current path and redirect to index.html
+        var fullPath = window.location.pathname + window.location.search + window.location.hash;
+        sessionStorage.setItem('ghpagesRedirect', fullPath);
+        
+        // Show loading state briefly before redirect
+        document.addEventListener('DOMContentLoaded', function() {
+          var root = document.getElementById('root');
+          if (root) {
+            root.innerHTML = '<div class="loading"><div class="loading-spinner"></div><p class="hebrew-text">מפנה לעמוד הנכון...</p></div>';
+          }
+        });
+        
+        // Redirect after a brief delay to show loading state
+        setTimeout(function() {
+          window.location.replace('/vacationplan/');
+        }, 100);
+      } catch (error) {
+        // Fallback immediate redirect if any error occurs
+        window.location.replace('/vacationplan/');
+      }
     </script>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div class="loading">
+        <div class="loading-spinner"></div>
+        <p class="hebrew-text">מפנה לעמוד הנכון...</p>
+      </div>
+    </div>
   </body>
 </html>
