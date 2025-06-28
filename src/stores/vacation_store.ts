@@ -182,9 +182,11 @@ export const use_vacations = () => {
 export const use_current_vacation = () => {
   const current_vacation = use_vacation_store((state) => state.current_vacation)
   const set_current_vacation = use_vacation_store((state) => state.set_current_vacation)
-  const activities = use_vacation_store((state) => 
-    current_vacation ? state.get_vacation_activities(current_vacation.id) : []
-  )
+  const all_activities = use_vacation_store((state) => state.activities)
+  
+  const activities = current_vacation 
+    ? all_activities.filter((activity) => activity.vacation_id === current_vacation.id)
+    : []
   
   return {
     current_vacation,
@@ -194,12 +196,14 @@ export const use_current_vacation = () => {
 }
 
 export const use_activities = (vacation_id?: string) => {
-  const activities = use_vacation_store((state) => 
-    vacation_id ? state.get_vacation_activities(vacation_id) : state.activities
-  )
+  const all_activities = use_vacation_store((state) => state.activities)
   const add_activity = use_vacation_store((state) => state.add_activity)
   const update_activity = use_vacation_store((state) => state.update_activity)
   const delete_activity = use_vacation_store((state) => state.delete_activity)
+  
+  const activities = vacation_id 
+    ? all_activities.filter((activity) => activity.vacation_id === vacation_id)
+    : all_activities
   
   return {
     activities,
