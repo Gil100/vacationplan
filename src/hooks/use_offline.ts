@@ -39,10 +39,8 @@ export const use_offline = (): UseOfflineReturn => {
             new_worker.addEventListener('statechange', () => {
               if (new_worker.state === 'activated') {
                 console.log('Service Worker updated and activated')
-                // Optionally prompt user to reload
-                if (confirm('עדכון חדש זמין. רוצה לרענן את הדף?')) {
-                  window.location.reload()
-                }
+                // Show a non-blocking toast notification instead of confirm dialog
+                show_update_notification()
               }
             })
           }
@@ -255,4 +253,39 @@ export const use_offline_queue = () => {
     add_to_queue,
     process_queue
   }
+}
+
+// Non-blocking update notification
+function show_update_notification() {
+  // Create a toast notification instead of blocking confirm dialog
+  const notification_div = document.createElement('div')
+  notification_div.className = 'fixed top-4 right-4 z-50 bg-blue-600 text-white p-4 rounded-lg shadow-lg max-w-sm'
+  notification_div.innerHTML = `
+    <div class="flex items-center justify-between">
+      <div class="flex items-center">
+        <span class="text-lg me-2">🔄</span>
+        <div>
+          <div class="font-medium">עדכון זמין</div>
+          <div class="text-sm opacity-90">רענן לקבלת התכונות החדשות</div>
+        </div>
+      </div>
+      <div class="flex ms-4 space-s-2">
+        <button onclick="window.location.reload()" class="bg-white text-blue-600 px-3 py-1 rounded text-sm font-medium hover:bg-gray-100">
+          רענן
+        </button>
+        <button onclick="this.parentElement.parentElement.parentElement.remove()" class="text-white hover:text-gray-200 p-1">
+          ✕
+        </button>
+      </div>
+    </div>
+  `
+  
+  document.body.appendChild(notification_div)
+  
+  // Auto-remove after 10 seconds
+  setTimeout(() => {
+    if (notification_div.parentElement) {
+      notification_div.remove()
+    }
+  }, 10000)
 }
