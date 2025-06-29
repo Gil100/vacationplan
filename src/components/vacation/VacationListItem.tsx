@@ -33,7 +33,7 @@ const VacationListItem: React.FC<VacationListItemProps> = ({ vacation }) => {
 
   const handle_edit = () => {
     set_current_vacation(vacation)
-    window.location.href = '/planner'
+    window.location.href = '/vacationplan/planner'
   }
 
   const handle_delete = () => {

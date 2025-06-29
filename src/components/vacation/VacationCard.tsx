@@ -34,7 +34,7 @@ const VacationCard: React.FC<VacationCardProps> = ({ vacation }) => {
   const handle_edit = () => {
     set_current_vacation(vacation)
     // Navigate to planner page
-    window.location.href = '/planner'
+    window.location.href = '/vacationplan/planner'
   }
 
   const handle_delete = () => {

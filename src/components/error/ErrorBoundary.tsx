@@ -65,7 +65,7 @@ class ErrorBoundary extends Component<Props, State> {
   }
   
   handle_home = () => {
-    window.location.href = '/'
+    window.location.href = '/vacationplan/'
   }
   
   render() {
