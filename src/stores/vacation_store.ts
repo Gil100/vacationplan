@@ -153,6 +153,7 @@ export const use_vacation_store = create<VacationStore>()(
         partialize: (state) => ({
           vacations: state.vacations,
           activities: state.activities,
+          current_vacation: state.current_vacation,
         }),
       }
     ),
